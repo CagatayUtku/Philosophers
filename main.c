@@ -6,37 +6,42 @@
 /*   By: Cutku <cutku@student.42heilbronn.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 01:16:49 by Cutku             #+#    #+#             */
-/*   Updated: 2023/05/28 04:53:11 by Cutku            ###   ########.fr       */
+/*   Updated: 2023/06/06 03:42:19 by Cutku            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+void	leaks(void)
+{
+	system("leaks philo");
+}
+
 int	main(int argc, char **argv)
 {
-	t_philo	*philo;
-	t_args	args;
-	int		i;
+	t_philo		*philo;
+	t_garbage	*garbage;
+	t_args		args;
 
 	if (argc > 4 && argc < 7)
 	{
-		philo = malloc(ft_atoi(argv[1]) * sizeof(t_philo));
-		if (!philo)
+		garbage = NULL;
+		if (check_args(argc, argv))
 			return (1);
-		init_args(&args, argv);
+		philo = my_malloc(&garbage, ft_atoi(argv[1]), sizeof(t_philo));
+		init_args(&args, argv, &garbage);
 		init_philo(philo, &args);
 		create_even_philo(philo);
-		usleep(500);
 		create_odd_philo(philo);
-		control_thread(philo, &args);
-		i = -1;
-		if (pthread_join(args.control, NULL) != 0)
-			printf("Error in join thread\n");
-		while (++i < args.num_philo)
-		{
-			if (pthread_join(philo[i].thread_id, NULL) != 0)
-				printf("Error in join thread\n");
-		}
+		create_control_thread(philo, &args);
+		thread_join(philo, &args);
+		destroy_mutexes(philo, &args);
+		free_garbage(&garbage);
+	}
+	else
+	{
+		write(2, "Wrong number of arguments!\n", 27);
+		return (EINVAL);
 	}
 	return (0);
 }

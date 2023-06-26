@@ -6,7 +6,7 @@
 #    By: Cutku <cutku@student.42heilbronn.de>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/16 05:30:32 by Cutku             #+#    #+#              #
-#    Updated: 2023/05/29 00:59:29 by Cutku            ###   ########.fr        #
+#    Updated: 2023/06/06 03:42:08 by Cutku            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,13 +21,13 @@ WHITE = \033[0;97m
 
 .SILENT:
 
-SRCS	=	main.c libft_funcs.c my_sleep.c control.c create_threads.c init_structs.c \
-		mutex.c process.c
+SRCS	=	main.c libft_funcs.c my_sleep.c control_process.c create_threads.c init_structs.c \
+		mutex.c philo_process.c leak_trace.c parse.c
 OBJS	=	$(SRCS:.c=.o)
 
 CC			= cc
 RM			= rm -f
-CFLAGS		= -Wall -Werror -Wextra -pthread #-fsanitize=thread -g
+CFLAGS		= -pthread -Wall -Werror -Wextra #-fsanitize=thread -g
 
 NAME		= philo
 
